@@ -31,7 +31,7 @@ This is the backend API for the My-Journal application, built with Ruby on Rails
 - `DELETE /journals/:journal_id/tags/:id` — Remove a tag from a journal (requires JWT)
 
 
-```
+
 
 ## Running Tests
 
