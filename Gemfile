@@ -48,7 +48,7 @@ end
 
 gem "bcrypt", "~> 3.1.7"
 gem "jwt", "~> 2.7"
-gem "rspec-rails", "~> 6.0"
+gem "rspec-rails", "~> 8.0"
 gem "factory_bot_rails"
 gem "faker"
 gem "rack-cors"
