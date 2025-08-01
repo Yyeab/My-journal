@@ -1,0 +1,13 @@
+.homepage-journal-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.2em;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.homepage-journal-card {
+  flex: 1 1 calc((100% - 4.4em) / 3);
+  max-width: calc((100% - 4.4em) / 3);
+  min-width: 280px;
+}

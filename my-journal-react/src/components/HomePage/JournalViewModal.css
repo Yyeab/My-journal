@@ -1,0 +1,122 @@
+.journal-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(34, 34, 34, 0.18);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.journal-modal {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(53, 122, 56, 0.13);
+  max-width: 800px;
+  width: 90vw;
+  max-height: 80vh;
+  padding: 2.2em 2em 2em 2em;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  overflow: hidden;
+}
+
+.journal-modal-close {
+  position: absolute;
+  top: 1.2em;
+  right: 1.2em;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: #357a38;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.journal-modal-close:hover {
+  background: #eaf3e7;
+}
+
+.journal-modal-title {
+  font-size: 2em;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 0.2em;
+}
+
+.journal-modal-date {
+  color: #7e7567;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.7em;
+}
+
+.journal-modal-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.7em;
+  flex-wrap: wrap;
+}
+
+.journal-modal-tags-label {
+  font-weight: 600;
+  color: #222;
+  margin-right: 0.7em;
+}
+
+.journal-modal-content-label {
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 0.5em;
+}
+
+.journal-modal-content {
+  background: #fafaf7;
+  border-radius: 10px;
+  padding: 1.2em;
+  color: #333;
+  font-size: 1.1em;
+  max-height: 32vh;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+@media (max-width: 600px) {
+  .journal-modal {
+    max-width: 85vw;
+    width: 85vb;
+    min-width: 0;
+    padding: 1.2em 0.5em 1.2em 0.5em;
+    max-height: 95vh;
+    border-radius: 8px;
+  }
+  .journal-modal-content {
+    font-size: 1em;
+    padding: 0.7em;
+    max-height: 40vh;
+  }
+  .journal-modal-title {
+    font-size: 1.3em;
+  }
+  .journal-modal-close {
+    top: 0.7em;
+    right: 0.7em;
+    width: 28px;
+    height: 28px;
+    font-size: 1.2em;
+  }
+}
