@@ -4,6 +4,14 @@ import "./JournalViewModal.css";
 
 function JournalViewModal({ journal, onClose }) {
   if (!journal) return null;
+  const dateStr = journal.created_at
+    ? new Date(journal.created_at).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
   return (
     <div className="journal-modal-overlay" onClick={onClose}>
       <div className="journal-modal" onClick={(e) => e.stopPropagation()}>
@@ -19,13 +27,17 @@ function JournalViewModal({ journal, onClose }) {
           <span>
             <img src="/date.svg" alt="date" />
           </span>
-          {journal.date}
+          {dateStr}
         </div>
         <div className="journal-modal-tags">
           <span className="journal-modal-tags-label">Tags</span>
-          {journal.tags.map((tag, idx) => (
-            <Tag key={idx} label={tag} />
-          ))}
+          {journal.tags && journal.tags.length > 0 ? (
+            journal.tags.map((tag, idx) => (
+              <Tag key={tag.id || tag.tag_name || idx} label={tag.tag_name} />
+            ))
+          ) : (
+            <span style={{ color: "#aaa", fontSize: "0.95em" }}>No tags</span>
+          )}
         </div>
         <div className="journal-modal-content-label">Content</div>
         <div className="journal-modal-content">

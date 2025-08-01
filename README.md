@@ -16,7 +16,6 @@ This is the backend API for the My-Journal application, built with Ruby on Rails
    
    ```
 
-
 ## API Endpoints
 
 - `POST /signup` — Register a new user
@@ -29,9 +28,6 @@ This is the backend API for the My-Journal application, built with Ruby on Rails
 - `GET /journals/:journal_id/tags` — List tags for a journal (requires JWT)
 - `POST /journals/:journal_id/tags` — Add a tag to a journal (requires JWT)
 - `DELETE /journals/:journal_id/tags/:id` — Remove a tag from a journal (requires JWT)
-
-
-```
 
 ## Running Tests
 
@@ -49,4 +45,49 @@ bin/rspec spec/requests/journals_spec.rb
 bin/rspec spec/requests/tags_spec.rb
 ```
 
+---
+
+# My-Journal React Frontend
+
+This is the frontend for the My-Journal application, built with React and Vite.
+
+## Setup Instructions
+
+**Install dependencies:**
+   ```sh
+   cd my-journal-react
+   npm install
+   ```
+
+**Start the development server:**
+   ```sh
+   npm run dev
+   ```
+
+
+## Features
+
+- User authentication (sign up, sign in, logout)
+- Create, view, edit, and delete journal entries
+- Add and remove tags (moods) for each journal
+- Search and sort journals
+- Download journal entries as PDF
+- Responsive design for desktop and mobile
+- JWT-based session management
+
+
+
+## Project Structure
+
+- `src/components/` — React components for authentication, journal management, overlays, and modals
+- `src/App.jsx` — Main app and routing logic
+- `public/` — Static assets and SVG icons
+
+## Connecting to Backend
+
+The frontend expects the Rails backend to be running at `http://localhost:3000`. Make sure CORS is enabled in the backend for `http://localhost:5173`.
+
+
+
+---
 

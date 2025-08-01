@@ -115,7 +115,13 @@ label {
   color: #555;
   margin-bottom: 1rem;
 }
-
+.form-error {
+  margin-top: 8px;
+  font-size: 0.95em;
+  color: #d32f2f;
+  background: none;
+  border: none;
+}
 .form-group {
   margin-bottom: 1rem;
 }

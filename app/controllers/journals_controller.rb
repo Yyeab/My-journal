@@ -13,24 +13,34 @@ class JournalsController < ApplicationController
 
   def create
     journal = current_user.journals.build(journal_params)
+    tags = params[:journal][:tags] || []
     if journal.save
-      render json: journal, status: :created
+      tags.each do |tag_name|
+        journal.tags.create(tag_name: tag_name)
+      end
+      render json: journal.as_json(include: :tags), status: :created
     else
       render json: { errors: journal.errors.full_messages }, status: :unprocessable_entity
-    end
-  end
-
-  def update
-    if @journal.update(journal_params)
-      render json: @journal
-    else
-      render json: { errors: @journal.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def destroy
     @journal.destroy
     head :no_content
+  end
+
+  def update
+    if @journal.update(journal_params)
+      if params[:journal][:tags]
+        @journal.tags.destroy_all
+        params[:journal][:tags].each do |tag_name|
+          @journal.tags.create(tag_name: tag_name)
+        end
+      end
+      render json: @journal.as_json(include: :tags)
+    else
+      render json: { errors: @journal.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   private

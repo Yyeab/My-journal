@@ -93,6 +93,9 @@
   max-height: 32vh;
   overflow-y: auto;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 600px) {

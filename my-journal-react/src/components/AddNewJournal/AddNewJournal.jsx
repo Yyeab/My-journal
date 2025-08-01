@@ -1,13 +1,16 @@
+import React from "react";
 import { useState } from "react";
+import axios from "axios";
 import "./AddNewJournal.css";
 import Header from "../HomePage/Header";
 
-function AddNewJournal({ onBack }) {
+function AddNewJournal({ onBack, userId, onJournalAdded }) {
   const [title, setTitle] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState([]);
   const [story, setStory] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   function handleAddTag() {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -16,15 +19,41 @@ function AddNewJournal({ onBack }) {
     }
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!title.trim() || !story.trim()) {
       setError("Title and Your Story are required.");
       return;
     }
     setError("");
-    alert("Journal entry saved!");
-    if (onBack) onBack();
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:3000/journals",
+        {
+          journal: {
+            title,
+            content: story,
+            tags,
+            user_id: userId,
+          },
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.data && response.data.id) {
+        if (onJournalAdded) onJournalAdded();
+        if (onBack) onBack();
+      } else {
+        setError("Failed to save journal entry.");
+      }
+    } catch (err) {
+      setError("Failed to save journal entry.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -44,6 +73,7 @@ function AddNewJournal({ onBack }) {
           <label className="add-journal-label">Title</label>
           <input
             className="add-journal-input"
+            id="add-journal-title"
             type="text"
             placeholder="What's on your mind today?"
             value={title}
@@ -86,7 +116,7 @@ function AddNewJournal({ onBack }) {
           {error && <div className="add-journal-error">{error}</div>}
           <div className="add-journal-actions">
             <button type="submit" className="add-journal-save">
-              Save Entry
+              Save
             </button>
             <button
               type="button"

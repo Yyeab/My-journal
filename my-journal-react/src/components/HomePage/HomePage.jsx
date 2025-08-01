@@ -1,64 +1,98 @@
 import "./HomePage.css";
-import { useState } from "react";
 import Header from "./Header";
 import SearchBar from "./SearchBar";
 import SortDropdown from "./SortDropdown";
 import NewJournalButton from "./NewJournalButton";
 import JournalList from "./JournalList";
+import EditJournal from "../EditJournal/EditJournal.jsx";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-function HomePage({ onAddJournal }) {
-  const journals = [
-    {
-      id: 1,
-      title: "A Beautiful Morning Walk",
-      date: "Monday, January 15, 2024",
-      content:
-        "Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...Today I took a long walk through the park and noticed how the morning light filtered through the leaves. There's something magical about starting the ...",
-      tags: ["Peaceful", "Grateful", "nature", "morning", "reflection"],
-    },
-    {
-      id: 2,
-      title: "Learning Something New",
-      date: "Sunday, January 14, 2024",
-      content:
-        "Started learning to play guitar today. My fingers hurt and the chords sound terrible, but there's something exciting about being a beginner again. It ...",
-      tags: ["Excited", "Challenged", "learning", "music", "growth"],
-    },
-    {
-      id: 3,
-      title: "Family Dinner Memories",
-      date: "Saturday, January 13, 2024",
-      content:
-        "Had dinner with the family tonight. We laughed so much that my cheeks hurt. Mom made her famous lasagna, and dad told his classic jokes. These are the ...",
-      tags: ["Grateful", "Happy", "Loved", "family", "memories", "gratitude"],
-    },
-  ];
+function HomePage({ user, onAddJournal, onLogout, onEdit }) {
+  const [journals, setJournals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [editingJournalId, setEditingJournalId] = useState(null);
+
+  async function fetchJournals() {
+    setLoading(true);
+    setError("");
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:3000/journals", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setJournals(Array.isArray(response.data) ? response.data : []);
+    } catch (err) {
+      setError("Failed to fetch journals");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchJournals();
+  }, []);
 
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("Newest First");
 
+  async function handleDeleteJournal() {
+    await fetchJournals();
+  }
+
+  async function handleEditComplete() {
+    setEditingJournalId(null);
+    await fetchJournals();
+  }
+
+  function handleEditJournal(journalId) {
+    setEditingJournalId(journalId);
+  }
+
   const filteredJournals = journals.filter((j) =>
-    j.title.toLowerCase().includes(search.toLowerCase())
+    (j.title || "").toLowerCase().includes(search.toLowerCase())
   );
 
   const sortedJournals = [...filteredJournals].sort((a, b) => {
     if (sort === "Newest First") {
-      return new Date(b.date) - new Date(a.date);
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+      if (dateB - dateA !== 0) {
+        return dateB - dateA;
+      } else {
+        return (b.id || 0) - (a.id || 0);
+      }
     } else if (sort === "Oldest First") {
-      return new Date(a.date) - new Date(b.date);
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+      if (dateA - dateB !== 0) {
+        return dateA - dateB;
+      } else {
+        return (a.id || 0) - (b.id || 0);
+      }
     } else if (sort === "Title A-Z") {
-      return a.title.localeCompare(b.title);
+      return (a.title || "").localeCompare(b.title || "");
     } else if (sort === "Title Z-A") {
-      return b.title.localeCompare(a.title);
+      return (b.title || "").localeCompare(a.title || "");
     }
     return 0;
   });
 
+  if (editingJournalId) {
+    return (
+      <EditJournal journalId={editingJournalId} onBack={handleEditComplete} />
+    );
+  }
+
   return (
     <div className="homepage-bg">
-      <Header />
+      <Header onLogout={onLogout} />
       <main className="homepage-main">
-        <h1 className="homepage-title">Welcome back to your journal</h1>
+        <h1 className="homepage-title">
+          Welcome to your journal{" "}
+          <span style={{ color: "#357a38" }}>{user?.username || "Guest"}</span>.
+        </h1>
         <p className="homepage-subtitle">
           You have {sortedJournals.length} entries
         </p>
@@ -69,7 +103,21 @@ function HomePage({ onAddJournal }) {
             <NewJournalButton onClick={onAddJournal} />
           </div>
         </div>
-        <JournalList journals={sortedJournals} />
+        {loading ? (
+          <p className="homepage-subtitle">Loading journals...</p>
+        ) : error ? (
+          <p className="homepage-subtitle" style={{ color: "red" }}>
+            {error}
+          </p>
+        ) : sortedJournals.length === 0 ? (
+          <p className="homepage-subtitle">You don't have any journals yet.</p>
+        ) : (
+          <JournalList
+            journals={sortedJournals}
+            onDelete={handleDeleteJournal}
+            onEdit={handleEditJournal}
+          />
+        )}
       </main>
     </div>
   );
