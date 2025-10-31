@@ -47,7 +47,7 @@ group :development, :test do
 end
 
 gem "bcrypt", "~> 3.1.7"
-gem "jwt", "~> 2.7"
+gem "jwt", "~> 3.1"
 gem "rspec-rails", "~> 6.0"
 gem "factory_bot_rails"
 gem "faker"
